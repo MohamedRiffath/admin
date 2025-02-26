@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Heading, Text, VStack, Icon, Divider, Input, Button, HStack } from "@chakra-ui/react";
+import { Box, Heading, Text, VStack, Icon, Divider, Input, Button, HStack, Link } from "@chakra-ui/react";
 import { FaCertificate, FaPlus, FaTrash } from "react-icons/fa";
 
 const Certifications = ({ certificates, isEditing, onSave }) => {
@@ -40,7 +40,15 @@ const Certifications = ({ certificates, isEditing, onSave }) => {
                 <VStack align="start" spacing={1} width="100%">
                   <Input size="md" value={cert.name} onChange={(e) => handleChange(index, "name", e.target.value)} placeholder="Certification Name" />
                   <Input size="md" value={cert.issuer} onChange={(e) => handleChange(index, "issuer", e.target.value)} placeholder="Issuer" />
-                  <Input size="md" value={cert.year} onChange={(e) => handleChange(index, "year", e.target.value)} placeholder="Year" />
+                  <Input
+                    size="md"
+                    value={cert.year}
+                    onChange={(e) => {
+                      const newValue = e.target.value.replace(/[^0-9]/g, "");
+                      handleChange(index, "year", newValue);
+                    }}
+                    placeholder="Year (Numbers Only)"
+                  />
                   <Input size="md" value={cert.link} onChange={(e) => handleChange(index, "link", e.target.value)} placeholder="Certification Link" />
                   <Input 
                     type="file" 
@@ -62,9 +70,9 @@ const Certifications = ({ certificates, isEditing, onSave }) => {
                     </Text>
                   )}
                   {cert.file && (
-                    <Text fontSize="sm" color="green.500">
-                      Uploaded: {cert.file.name}
-                    </Text>
+                    <Link href={URL.createObjectURL(cert.file)} target="_blank" color="green.500">
+                      View Uploaded File
+                    </Link>
                   )}
                 </>
               )}

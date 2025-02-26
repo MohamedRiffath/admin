@@ -1,11 +1,13 @@
-import React, { useState } from "react";
-import { 
-  Avatar, Box, Text, useColorModeValue, Grid, GridItem, Input
-} from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
+import { Avatar, Box, Text, useColorModeValue, Grid, GridItem, Input, IconButton } from "@chakra-ui/react";
+import { FaCamera } from "react-icons/fa";
 import Card from "components/card/Card.js";
 
 export default function Banner(props) {
-  const { banner, avatar, name, education, department, workHistory, organization, birthday, languages, isEditing } = props;
+  const { 
+    banner, avatar, name, institution, degree, branch, currentsemester, dob, gender, mobileno, mailid, 
+    isEditing 
+  } = props;
 
   // Chakra Color Mode
   const textColorPrimary = useColorModeValue("secondaryGray.900", "white");
@@ -15,21 +17,31 @@ export default function Banner(props) {
 
   // Editable Fields State
   const [editableData, setEditableData] = useState({
-    name,
-    education,
-    department,
-    workHistory,
-    organization,
-    birthday,
-    languages,
+    name, institution, degree, branch, currentsemester, dob, gender, mobileno, mailid
   });
 
+  const [profilePic, setProfilePic] = useState(avatar); // Profile picture state
+
+  // Update local state when props change
+  useEffect(() => {
+    setEditableData({ name, institution, degree, branch, currentsemester, dob, gender, mobileno, mailid });
+    setProfilePic(avatar); // Update profile picture if props change
+  }, [name, institution, degree, branch, currentsemester, dob, gender, mobileno, mailid, avatar]);
+
   const handleChange = (field, value) => {
-    setEditableData({ ...editableData, [field]: value });
+    setEditableData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleProfilePicChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setProfilePic(imageUrl);
+    }
   };
 
   return (
-    <Card mb={{ base: "0px", lg: "20px" }} align="center" p="20px">
+    <Card mb={{ base: "0px", lg: "20px" }} align="center" p="20px" w="100%">
       {/* Background Banner */}
       <Box
         bg={`url(${banner})`}
@@ -37,18 +49,48 @@ export default function Banner(props) {
         borderRadius="16px"
         h="150px"
         w="100%"
+        position="relative"
       />
       
       {/* Profile Picture */}
-      <Avatar
-        mx="auto"
-        src={avatar}
-        h="120px"
-        w="120px"
-        mt="-60px"
-        border="4px solid"
-        borderColor={borderColor}
-      />
+      <Box position="relative" mx="auto" w="120px" h="120px">
+        <Avatar
+          src={profilePic}
+          h="120px"
+          w="120px"
+          mt="-60px"
+          border="4px solid"
+          borderColor={borderColor}
+        />
+        {isEditing && (
+          <>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleProfilePicChange}
+              style={{
+                position: "absolute",
+                width: "100%",
+                height: "100%",
+                opacity: 0,
+                cursor: "pointer",
+              }}
+            />
+            <IconButton
+              icon={<FaCamera />}
+              position="absolute"
+              bottom="50px"
+              right="5px"
+              size="sm"
+              borderRadius="full"
+              bg="gray.600"
+              color="white"
+              _hover={{ bg: "gray.500" }}
+              onClick={() => document.querySelector('input[type="file"]').click()}
+            />
+          </>
+        )}
+      </Box>
 
       {/* Name Field */}
       {isEditing ? (
@@ -57,11 +99,11 @@ export default function Banner(props) {
           onChange={(e) => handleChange("name", e.target.value)}
           fontSize="2xl"
           fontWeight="bold"
-          mt="15px"
+          mt="-50px"
           textAlign="center"
         />
       ) : (
-        <Text color={textColorPrimary} fontWeight="bold" fontSize="2xl" mt="15px" textAlign="center">
+        <Text color={textColorPrimary} fontWeight="bold" fontSize="2xl" mt="-50px" textAlign="center">
           {editableData.name}
         </Text>
       )}
@@ -69,29 +111,56 @@ export default function Banner(props) {
       {/* Student Information Grid */}
       <Grid templateColumns="repeat(2, 1fr)" gap={4} mt={5} w="100%">
         {[
-          { label: "Education", field: "education" },
-          { label: "Department", field: "department" },
-          { label: "Organization", field: "organization" },
-          { label: "Work History", field: "workHistory" },
-          { label: "Birthday", field: "birthday" },
-          { label: "Languages", field: "languages" },
+          { label: "Institution", field: "institution" },
+          { label: "Degree", field: "degree" },
+          { label: "Branch", field: "branch" },
+          { label: "Current Semester", field: "currentsemester" },
+          { label: "Date of Birth", field: "dob" },
+          { label: "Gender", field: "gender" },
+          { label: "Mobile No", field: "mobileno" },
+          { label: "Mail Id", field: "mailid" },
         ].map(({ label, field }) => (
-          <GridItem key={field} bg={bgColor} p={3} borderRadius="10px">
-            <Text color={textColorPrimary} fontSize="md" fontWeight="bold">{label}</Text>
+          <GridItem 
+            key={field} 
+            bg={bgColor} 
+            p={3} 
+            borderRadius="10px"
+            minH="60px"
+            w="100%" 
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            textAlign="center"
+          >
+            <Text 
+              color={textColorPrimary} 
+              fontSize="med" 
+              fontWeight="bold"
+              whiteSpace="nowrap"
+            >
+              {label}
+            </Text>
             {isEditing ? (
               <Input
                 value={editableData[field]}
                 onChange={(e) => handleChange(field, e.target.value)}
                 fontSize="sm"
+                textAlign="center"
+                mt="1"
+                w="100%" 
+                p="2"  
+                wordBreak="break-word"
+                whiteSpace="normal"
               />
             ) : (
-              <Text color={textColorSecondary} fontSize="sm">{editableData[field]}</Text>
+              <Text color={textColorSecondary} fontSize="sm" textAlign="center" mt="1" wordBreak="break-word" whiteSpace="normal">
+                {editableData[field]}
+              </Text>
             )}
           </GridItem>
         ))}
       </Grid>
-
-      
     </Card>
   );
 }

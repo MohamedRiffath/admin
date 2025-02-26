@@ -8,9 +8,8 @@ import {
   Icon,
   Input,
   Button,
-  Select,
 } from "@chakra-ui/react";
-import { FaTasks, FaUsers, FaClipboardCheck } from "react-icons/fa";
+import { FaTasks } from "react-icons/fa";
 
 const Activities = ({ activities, isEditing, onSave }) => {
   const [editableActivities, setEditableActivities] = useState(activities);
@@ -57,7 +56,7 @@ const Activities = ({ activities, isEditing, onSave }) => {
             spacing={2}
             align="start"
           >
-            <Icon as={activity.type === "Leadership" ? FaUsers : FaClipboardCheck} color="teal.500" boxSize={6} />
+            {/* <Icon as={activity.type === "Leadership" ? FaUsers : FaClipboardCheck} color="teal.500" boxSize={6} /> */}
             
             {isEditing ? (
               <>
@@ -77,13 +76,13 @@ const Activities = ({ activities, isEditing, onSave }) => {
                   type="number"
                   maxW="100px"
                 />
-                <Select
+                {/* <Select
                   value={activity.type}
                   onChange={(e) => handleChange(index, "type", e.target.value)}
                 >
                   <option value="General">General</option>
                   <option value="Leadership">Leadership</option>
-                </Select>
+                </Select> */}
                 <Button colorScheme="red" size="sm" onClick={() => removeActivity(index)}>
                   Remove
                 </Button>

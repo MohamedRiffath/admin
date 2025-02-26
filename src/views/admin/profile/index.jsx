@@ -8,7 +8,7 @@ import Activities from "views/admin/profile/components/Activities";
 import Publications from "views/admin/profile/components/Publications";
 import EducationDetails from "views/admin/profile/components/EducationDetails";
 import CgpaAnalysis from "views/admin/profile/components/CgpaAnalysis";
-
+import Experience from "views/admin/profile/components/Experience";
 
 import banner from "assets/img/auth/banner.png";
 import avatar from "assets/img/avatars/avatar4.png";
@@ -73,17 +73,19 @@ export default function Overview() {
       </Button>
 
       <Grid templateColumns={{ base: "1fr", lg: "repeat(3, 1fr)" }} gap="24px" mb="24px" alignItems="stretch">
-        <Box height="450px" overflowY="auto">
+        <Box height="450px" overflowY="auto" css={{ scrollbarWidth: 'none', msOverflowStyle: 'none', '&::-webkit-scrollbar': { display: 'none' } }}>
           <Banner
             banner={banner}
             avatar={avatar}
             name="Mohamed Riffath K"
-            education="Stanford University"
-            department="Computer Technology"
-            workHistory="Google, Facebook"
-            organization="Simmmple Web LLC"
-            birthday="20 July 1986"
-            languages="English, Spanish, Italian"
+            institution="MIT"
+            degree="B.E"
+            branch="Computer Technology"
+            currentsemester="8"
+            dob="18-12-2023"
+            gender="Male"
+            mobileno="8667546405"
+            mailid="riffath786mohamed@gmail.com"
             isEditing={editingStates.banner}
           />
           {isMainEditing && (
@@ -95,7 +97,7 @@ export default function Overview() {
           )}
         </Box>
 
-        <Box height="450px" overflowY="auto">
+        <Box height="450px" overflowY="auto" css={{ scrollbarWidth: 'none', msOverflowStyle: 'none', '&::-webkit-scrollbar': { display: 'none' } }}>
           <EducationDetails
             education={[
               { level: "College", degree: "B.Tech in Computer Science", institution: "Stanford University", year: "2024", score: "8.9 CGPA" },
@@ -114,7 +116,7 @@ export default function Overview() {
           )}
         </Box>
 
-        <Box height="450px" overflowY="auto">
+        <Box height="450px" overflowY="auto" css={{ scrollbarWidth: 'none', msOverflowStyle: 'none', '&::-webkit-scrollbar': { display: 'none' } }}>
           <Skills
             professionalSkills={[
               { name: "Python", level: 90 },
@@ -136,7 +138,7 @@ export default function Overview() {
       </Grid>
 
       <Grid templateColumns="repeat(2, 1fr)" gap="24px" mb="24px" alignItems="stretch">
-        <Box height="450px" overflowY="auto">
+        <Box height="400px" overflowY="auto" css={{ scrollbarWidth: 'none', msOverflowStyle: 'none', '&::-webkit-scrollbar': { display: 'none' } }}>
           <Projects
             projects={[
               { title: "AI Chatbot", description: "A chatbot powered by AI for customer service." },
@@ -155,20 +157,19 @@ export default function Overview() {
           )}
         </Box>
 
-        <Box height="450px" overflowY="auto">
-          <Publications
-            publications={[
-              { title: "Deep Learning for Image Recognition", journal: "IEEE Transactions", authors: "John Doe, Jane Smith", year: "2023", link: "https://example.com" },
-              { title: "AI in Healthcare", journal: "Nature AI", authors: "Alice Brown, Bob White", year: "2022", link: "https://example.com" },
-              { title: "Blockchain Technology in Finance", journal: "Financial Tech Journal", authors: "Charlie Green, Emma Black", year: "2021", link: "https://example.com" },
-              { title: "Quantum Computing Basics", journal: "Quantum Journal", authors: "Daniel Grey, Fiona Blue", year: "2020", link: "https://example.com" },
+        <Box height="400px" overflowY="auto" css={{ scrollbarWidth: 'none', msOverflowStyle: 'none', '&::-webkit-scrollbar': { display: 'none' } }}>
+          <Experience
+            experiences={[
+              { role: "Software Engineer", company: "Google", duration: "2021 - Present" },
+              { role: "Research Intern", company: "Facebook AI", duration: "2020 - 2021" },
+              { role: "Junior Developer", company: "Startup Inc.", duration: "2019 - 2020" },
             ]}
-            isEditing={editingStates.publications}
+            isEditing={editingStates.experience}
           />
           {isMainEditing && (
             <VStack mt={4}>
-              <Button onClick={() => handleComponentEditToggle('publications')} colorScheme="blue" size="sm">
-                {editingStates.publications ? "Save" : "Edit"}
+              <Button onClick={() => handleComponentEditToggle('experience')} colorScheme="blue" size="sm">
+                {editingStates.experience ? "Save" : "Edit"}
               </Button>
             </VStack>
           )}
@@ -176,7 +177,7 @@ export default function Overview() {
       </Grid>
 
       <Grid templateColumns="repeat(3, 1fr)" gap="24px" mb="24px" alignItems="stretch">
-        <Box height="350px" overflowY="auto">
+        <Box height="350px" overflowY="auto" css={{ scrollbarWidth: 'none', msOverflowStyle: 'none', '&::-webkit-scrollbar': { display: 'none' } }}>
           <Certifications
             certificates={[
               { name: "AI & Machine Learning", issuer: "Coursera", year: "2024" },
@@ -196,7 +197,7 @@ export default function Overview() {
           )}
         </Box>
 
-        <Box height="350px" overflowY="auto">
+        <Box height="350px" overflowY="auto" css={{ scrollbarWidth: 'none', msOverflowStyle: 'none', '&::-webkit-scrollbar': { display: 'none' } }}>
           <Activities
             activities={[
               { role: "Lead Organizer", organization: "TechFest 2024", year: "2024", type: "Leadership" },
@@ -215,7 +216,7 @@ export default function Overview() {
           )}
         </Box>
 
-        <Box height="350px" overflowY="auto">
+        <Box height="350px" overflowY="auto" css={{ scrollbarWidth: 'none', msOverflowStyle: 'none', '&::-webkit-scrollbar': { display: 'none' } }}>
           <Achievements
             achievements={[
               { title: "Best Research Paper Award", description: "Received for outstanding AI research", year: "2023" },
@@ -235,19 +236,37 @@ export default function Overview() {
         </Box>
       </Grid>
 
-      <Box height="450px" overflowY="auto">
-        <CgpaAnalysis
-          cgpaData={[8.9, 9.0, 8.7, 9.2]}
-          isEditing={false}
-        />
-        {isMainEditing && (
-          <VStack mt={4}>
-            <Button onClick={() => handleComponentEditToggle('cgpa')} colorScheme="blue" size="sm" isDisabled>
-              {editingStates.cgpa ? "Save" : "View"}
-            </Button>
-          </VStack>
-        )}
-      </Box>
+      <Grid templateColumns="repeat(2, 1fr)" gap="24px" mb="24px" alignItems="stretch">
+        <Box height="450px" overflowY="auto" css={{ scrollbarWidth: 'none', msOverflowStyle: 'none', '&::-webkit-scrollbar': { display: 'none' } }}>
+          <CgpaAnalysis
+            data={[
+              { semester: "Sem 1", cgpa: 8.9 },
+              { semester: "Sem 2", cgpa: 9.0 },
+              { semester: "Sem 3", cgpa: 8.7 },
+              { semester: "Sem 4", cgpa: 9.2 },
+            ]}
+          />
+        </Box>
+
+        <Box height="400px" overflowY="auto" css={{ scrollbarWidth: 'none', msOverflowStyle: 'none', '&::-webkit-scrollbar': { display: 'none' } }}>
+          <Publications
+            publications={[
+              { title: "Deep Learning for Image Recognition", journal: "IEEE Transactions", authors: "John Doe, Jane Smith", year: "2023", link: "https://example.com" },
+              { title: "AI in Healthcare", journal: "Nature AI", authors: "Alice Brown, Bob White", year: "2022", link: "https://example.com" },
+              { title: "Blockchain Technology in Finance", journal: "Financial Tech Journal", authors: "Charlie Green, Emma Black", year: "2021", link: "https://example.com" },
+              { title: "Quantum Computing Basics", journal: "Quantum Journal", authors: "Daniel Grey, Fiona Blue", year: "2020", link: "https://example.com" },
+            ]}
+            isEditing={editingStates.publications}
+          />
+          {isMainEditing && (
+            <VStack mt={4}>
+              <Button onClick={() => handleComponentEditToggle('publications')} colorScheme="blue" size="sm">
+                {editingStates.publications ? "Save" : "Edit"}
+              </Button>
+            </VStack>
+          )}
+        </Box>
+      </Grid>
     </Box>
   );
 }

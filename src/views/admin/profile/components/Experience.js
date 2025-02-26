@@ -1,103 +1,78 @@
 import React, { useState } from "react";
-import {
-  Box,
-  Heading,
-  VStack,
-  HStack,
-  Icon,
-  Text,
-  Badge,
-  Input,
-  Button,
-  Textarea,
-} from "@chakra-ui/react";
-import { FaBriefcase } from "react-icons/fa";
+import { Box, Button, Input, Text, Textarea, VStack, HStack, IconButton } from "@chakra-ui/react";
+import { Trash, Plus } from "lucide-react";
 
-const Experience = ({ experiences, isEditing, onUpdate }) => {
-  const [editableExperiences, setEditableExperiences] = useState(experiences);
+const Experience = ({ experiences, setExperiences, isEditing, setIsEditing }) => {
+  const [localExperiences, setLocalExperiences] = useState([...experiences]);
+
 
   const handleChange = (index, field, value) => {
-    const updatedExperiences = [...editableExperiences];
-    updatedExperiences[index][field] = value;
-    setEditableExperiences(updatedExperiences);
+    const updatedExperiences = [...localExperiences];
+    updatedExperiences[index] = { ...updatedExperiences[index], [field]: value };
+    setLocalExperiences(updatedExperiences);
   };
 
   const addExperience = () => {
-    setEditableExperiences([
-      ...editableExperiences,
-      { role: "", company: "", duration: "", description: "" },
-    ]);
+    setLocalExperiences([...localExperiences, { company: "", role: "", duration: "", description: "" }]);
   };
 
   const removeExperience = (index) => {
-    const updatedExperiences = editableExperiences.filter((_, i) => i !== index);
-    setEditableExperiences(updatedExperiences);
+    setLocalExperiences(localExperiences.filter((_, i) => i !== index));
   };
 
   return (
-    <Box p={6} bg="white" borderRadius="xl" boxShadow="lg" width="100%" maxW="900px" mx="auto">
-      <Heading size="lg" mb={5} textAlign="center">
-        <Icon as={FaBriefcase} color="blue.500" mr={2} /> Experience
-      </Heading>
+    <Box p={6} borderRadius="2xl" bg="white" boxShadow="xl" w="100%">
+      <HStack justifyContent="space-between" mb={4}>
+        <Text fontSize="2xl" fontWeight="bold">💼 Experience</Text>
+      </HStack>
 
-      <VStack align="start" spacing={5} w="full">
-        {editableExperiences.map((exp, index) => (
-          <HStack
-            key={index}
-            p={4}
-            border="1px solid"
-            borderColor="gray.200"
-            borderRadius="lg"
-            w="full"
-            bg="gray.50"
-          >
-            <Icon as={FaBriefcase} color="blue.500" boxSize={6} />
-            <VStack align="start" spacing={1} w="full">
+      {localExperiences.length === 0 && !isEditing ? (
+        <Text color="gray.500">No experience added yet.</Text>
+      ) : (
+        <VStack align="start" spacing={4}>
+          {localExperiences.map((exp, index) => (
+            <Box key={index} w="100%" p={4} borderRadius="lg" bg="gray.100">
               {isEditing ? (
-                <>
+                <VStack align="start" spacing={2}>
                   <Input
-                    value={exp.role}
-                    onChange={(e) => handleChange(index, "role", e.target.value)}
-                    placeholder="Job Title"
-                  />
-                  <Input
+                    placeholder="Company Name"
                     value={exp.company}
                     onChange={(e) => handleChange(index, "company", e.target.value)}
-                    placeholder="Company Name"
                   />
                   <Input
+                    placeholder="Role"
+                    value={exp.role}
+                    onChange={(e) => handleChange(index, "role", e.target.value)}
+                  />
+                  <Input
+                    placeholder="Duration"
                     value={exp.duration}
                     onChange={(e) => handleChange(index, "duration", e.target.value)}
-                    placeholder="Duration (e.g., 2020-2023)"
                   />
                   <Textarea
+                    placeholder="Description"
                     value={exp.description}
                     onChange={(e) => handleChange(index, "description", e.target.value)}
-                    placeholder="Brief Description"
                   />
-                  <Button colorScheme="red" size="sm" onClick={() => removeExperience(index)}>
-                    Remove
-                  </Button>
-                </>
+                  <IconButton icon={<Trash size={18} />} colorScheme="red" onClick={() => removeExperience(index)} />
+                </VStack>
               ) : (
-                <>
-                  <Text fontSize="md" fontWeight="bold">
-                    {exp.role} at {exp.company} <Badge colorScheme="green">{exp.duration}</Badge>
-                  </Text>
-                  <Text fontSize="sm" color="gray.600">
-                    {exp.description}
-                  </Text>
-                </>
+                <VStack align="start" spacing={1}>
+                  {exp.company && <Text fontSize="lg" fontWeight="bold">{exp.company}</Text>}
+                  {(exp.role || exp.duration) && <Text color="gray.600">{exp.role} {exp.role && exp.duration && "•"} {exp.duration}</Text>}
+                  {exp.description && <Text fontSize="sm" color="gray.500">{exp.description}</Text>}
+                </VStack>
               )}
-            </VStack>
-          </HStack>
-        ))}
-        {isEditing && (
-          <Button colorScheme="blue" size="sm" onClick={addExperience}>
-            Add Experience
-          </Button>
-        )}
-      </VStack>
+            </Box>
+          ))}
+        </VStack>
+      )}
+
+      {isEditing && (
+        <Button leftIcon={<Plus size={18} />} colorScheme="green" mt={4} onClick={addExperience}>
+          Add Experience
+        </Button>
+      )}
     </Box>
   );
 };

@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 import { Box, Heading, Text, VStack, Icon, Badge, Flex, Input, Button } from "@chakra-ui/react";
-import { FaGraduationCap, FaUniversity, FaSchool, FaPlus, FaTrash, FaEdit } from "react-icons/fa";
+import { FaGraduationCap, FaUniversity, FaSchool, FaPlus, FaTrash } from "react-icons/fa";
 
 const EducationDetails = ({ education, isEditing }) => {
-  const [editableEducation, setEditableEducation] = useState(education);
+  const [editableEducation, setEditableEducation] = useState(
+    education.sort((a, b) => b.year - a.year)
+  );
   const [newEdu, setNewEdu] = useState({ degree: "", institution: "", year: "", score: "", level: "School" });
-  const [editingIndex, setEditingIndex] = useState(null); // State to track which item is being edited
-  const [editingEdu, setEditingEdu] = useState({ degree: "", institution: "", year: "", score: "" });
-
-
 
   const handleAddEducation = () => {
     if (newEdu.degree && newEdu.institution && newEdu.year && newEdu.score) {
-      setEditableEducation([...editableEducation, newEdu]);
+      const updatedEducation = [...editableEducation, newEdu].sort((a, b) => b.year - a.year);
+      setEditableEducation(updatedEducation);
       setNewEdu({ degree: "", institution: "", year: "", score: "", level: "School" });
     }
   };
@@ -22,17 +21,10 @@ const EducationDetails = ({ education, isEditing }) => {
     setEditableEducation(updatedEducation);
   };
 
-  const handleEditClick = (index) => {
-    setEditingIndex(index);
-    setEditingEdu(editableEducation[index]); // Set the current item to be edited
-  };
-
-  const handleUpdateEducation = () => {
+  const handleChange = (index, field, value) => {
     const updatedEducation = [...editableEducation];
-    updatedEducation[editingIndex] = editingEdu; // Update the entry being edited
+    updatedEducation[index][field] = value;
     setEditableEducation(updatedEducation);
-    setEditingIndex(null); // Reset the editing index
-    setEditingEdu({ degree: "", institution: "", year: "", score: "" }); // Reset editing state
   };
 
   return (
@@ -51,40 +43,25 @@ const EducationDetails = ({ education, isEditing }) => {
                 {isEditing ? (
                   <>
                     <Input 
-                      value={editingIndex === index ? editingEdu.degree : edu.degree}
-                      onChange={(e) => setEditingEdu({ ...editingEdu, degree: e.target.value })}
+                      value={edu.degree}
+                      onChange={(e) => handleChange(index, "degree", e.target.value)}
                       placeholder="Degree"
                     />
                     <Input 
-                      value={editingIndex === index ? editingEdu.institution : edu.institution}
-                      onChange={(e) => setEditingEdu({ ...editingEdu, institution: e.target.value })}
+                      value={edu.institution}
+                      onChange={(e) => handleChange(index, "institution", e.target.value)}
                       placeholder="Institution"
                     />
                     <Input 
-                      value={editingIndex === index ? editingEdu.year : edu.year}
-                      onChange={(e) => setEditingEdu({ ...editingEdu, year: e.target.value })}
+                      value={edu.year}
+                      onChange={(e) => handleChange(index, "year", e.target.value)}
                       placeholder="Year"
                     />
                     <Input 
-                      value={editingIndex === index ? editingEdu.score : edu.score}
-                      onChange={(e) => setEditingEdu({ ...editingEdu, score: e.target.value })}
+                      value={edu.score}
+                      onChange={(e) => handleChange(index, "score", e.target.value)}
                       placeholder={edu.level === "College" ? "CGPA" : "Percentage"}
                     />
-                    <Button 
-                      colorScheme="blue" 
-                      onClick={() => handleUpdateEducation(index)}
-                      leftIcon={<FaEdit />}
-                      ml={2} // Space between the delete button
-                    >
-                      Update
-                    </Button>
-                    <Button 
-                      colorScheme="red" 
-                      onClick={() => handleDeleteEducation(index)}
-                      leftIcon={<FaTrash />}
-                    >
-                      Delete
-                    </Button>
                   </>
                 ) : (
                   <>
@@ -96,8 +73,10 @@ const EducationDetails = ({ education, isEditing }) => {
                   </>
                 )}
               </VStack>
-              {isEditing && editingIndex !== index && (
-                <Button onClick={() => handleEditClick(index)} leftIcon={<FaEdit />}>Edit</Button>
+              {isEditing && (
+                <Button colorScheme="red" onClick={() => handleDeleteEducation(index)}>
+                  <Icon as={FaTrash} />
+                </Button>
               )}
             </Flex>
           ))}
@@ -130,9 +109,7 @@ const EducationDetails = ({ education, isEditing }) => {
             placeholder={newEdu.level === "College" ? "CGPA" : "Percentage"}
           />
           <Flex alignItems="center" gap={2}>
-            <Button colorScheme="teal" onClick={handleAddEducation} leftIcon={<FaPlus />}>
-              Add
-            </Button>
+            <Button colorScheme="teal" onClick={handleAddEducation} leftIcon={<FaPlus />}>Add</Button>
           </Flex>
         </VStack>
       )}
